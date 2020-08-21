@@ -1,0 +1,45 @@
+---
+title: "Linear Regression"
+author: "Helee Rana"
+date: "8/20/2020"
+output: word_document
+---
+
+## LINEAR REGRESSION  
+```{r}
+usa_data=gapminder%>%filter(country=="United States")
+usa_data
+
+
+```
+
+```{r}
+usa_data%>%ggplot(aes(x=gdpPercap, y=lifeExp)) + geom_point() + geom_smooth(aes(x=gdpPercap, y=lifeExp), method = 'lm', se=0)
+```
+
+```{r}
+model=lm(lifeExp ~ gdpPercap , data=usa_data)
+summary(model)
+```
+
+```{r}
+usa_data=usa_data%>%mutate(gdpPercap=gdpPercap/1000, pop=pop/100000)
+model2 = lm(lifeExp ~ gdpPercap + pop, data = usa_data)
+summary(model2)
+```
+
+
+```{r}
+usa_data_with_prediction=usa_data%>%mutate(predictions =-89.918*gdpPercap + 909.844*pop + 55.076)
+usa_data_with_prediction
+
+```
+
+
+```{r}
+res=usa_data_with_prediction%>%mutate(residuals=predictions-lifeExp)
+```
+
+```{r}
+res%>%ggplot(aes(x=predictions, y=residuals))+geom_point()+geom_hline(yintercept = 0)
+```
